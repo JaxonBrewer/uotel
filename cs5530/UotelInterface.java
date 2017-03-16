@@ -25,13 +25,17 @@ public class UotelInterface {
    	 	System.out.println("3. Exit:");
    	 	System.out.println("pleasse enter your choice:");		
 	}
-	
-	public static String registerUser() {
-	
+
+	public static String loginUser(String login, String passwd) {
+		System.out.println("Username: ");
+
+		System.out.println("Password: ");
+		return "";
 	}
-
-	public static String loginUser() {
-
+	
+	public static String registerUser(String login, String passwd, String name, String address, String phone) {
+		System.out.println("Create Username: ");
+		return "";
 	}
 
 	public static void main(String[] args) {
