@@ -55,13 +55,13 @@ public class UotelInterface {
 	 * was invalid. 
 	 */
 	public static int displayMenu(String[] items, String header) {
-		System.out.println("\n\n\n    " + header);
+		System.out.println("\n\n\n----------- " + header + " -----------\n");
 
 		for (int i = 0; i < items.length; i++) {
 			System.out.println("" + (i+1) + ": " + items[i]);
 		}
 
-		System.out.print("Enter choice (blank to cancel): ");
+		System.out.print("\nEnter choice (blank to cancel): ");
 		
 		try {
 			String input = in.readLine();
@@ -117,6 +117,7 @@ public class UotelInterface {
 
 			catch (Exception e) { /* ignore close errors */ }
 		}
+		System.exit(0);
 	}
 	
 	public static void main(String[] args) {	
@@ -176,7 +177,7 @@ public class UotelInterface {
             }
             
             while (true) {
-				c = displayMenu(mainMenuItems, "Hello " + login + ", -- Uotel");
+				c = displayMenu(mainMenuItems, "Hello " + login);
 				
 				// Browse
 				if (c == 1) {
