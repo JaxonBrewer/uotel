@@ -74,38 +74,82 @@ public class UotelInterface {
 			System.out.println("Input Error");
 			return -1;
 		}
-	}     
+	}    
+
+	public static String[] getInput(String[] items) {
+		String[] inputs = new  String[items.length];
+
+		for (int i = 0; i < items.length; i++) {
+			System.out.print(items[i] + ": ");
+			try {
+				inputs[i] = in.readLine();
+			} catch(Exception e) {
+				System.out.println("Invalid input, exitting");
+				closeInterface();
+			}
+		}
+
+		return inputs;
+	}
 
 	public static void browseTH() {
-			
+		String[] prompts = {"Min Price", "Max Price", "Address", "Keywords", "category", "Sort on a) price, b) feedback, c) trusted feedback: "};
+		String[] inputs = getInput(prompts);
+
+		
 	}
 
 	public static void viewCart() {
-	
+		System.out.print("Not Implemented");
 	}
 
-	public static void createTH() {
+	public static void createTH(String login) {
+		String[] prompts = {"Listing Name", "Category", "Address", "Price", "Year Built", "Phone"};
+		String[] inputs = getInput(prompts);
+
+
+		int hid = TH.createTH(login, inputs[1], inputs[0], inputs[2], "", inputs[3], inputs[4], inputs[5], con.stmt);
+		if (hid >= 0) {
+			updateTH(hid, login);
+		} else {
+			System.out.println("Failed to add Listing");
+		}
 	
 	}
 
 	public static void recordStay() {
-	
+		System.out.print("Not Implemented");
 	}
 
-	public static void trustUser() {
-	
+	public static void trustUser(String login) {
+		String[] prompts = {"a) trust, b) not trust", "for Username"};
+		String[] inputs = getInput(prompts);
+
+		boolean trust = false;
+		trust = (inputs[0].equals("a"));
+		
+		if (Users.setTrust(login, inputs[1], trust, con.stmt)) {
+			System.out.println("Success!");
+		} else {
+			System.out.println("Fail");
+		}
 	}
 
 	public static void calcDegreeSeparation() {
-	
+		System.out.print("Not Implemented");
 	}
 
 	public static void statistics() {
-	
+		System.out.print("Not Implemented");
 	}
 
 	public static void award() {
-	
+		System.out.print("Not Implemented");
+	}
+
+	public static void updateTH(int hid, String login) {
+		String[] menuItems = {"Change name"};
+		System.out.print("Not Implemented");
 	}
 
 	public static void closeInterface() {
@@ -127,22 +171,22 @@ public class UotelInterface {
     	try
     	{
 			con = new Connector();
+			
+		
             System.out.println ("Database connection established"); 
 
             while (!loggedIn) {
 				c = displayMenu(loginItems, "Welcome to Uotel");
 				 
 				// login
-				if (c == 1) {
-					System.out.print("Username: ");
-					String username = in.readLine();
-					System.out.print("Password: ");
-					String password = in.readLine();
+				if (c == 1) {	
+					String[] prompts = {"Username", "Password"};
+					String[] inputs = getInput(prompts);
 
-					loggedIn = Users.loginUser(username, password, con.stmt);
+					loggedIn = Users.loginUser(inputs[0], inputs[1], con.stmt);
 					if (loggedIn) {
 						System.out.println("Login Successful");
-						login = username;
+						login = inputs[0];
 					}
 					else {
 						System.out.println("Login Failed.");
@@ -151,20 +195,12 @@ public class UotelInterface {
 
 				// register
 				else if (c == 2) {
-					System.out.print("Enter Username: ");
-					String username = in.readLine();
-					System.out.print("Enter Password: ");
-					String password = in.readLine();
-					System.out.print("Enter Name: ");
-					String name = in.readLine();
-					System.out.print("Enter Address: ");
-					String address = in.readLine();
-					System.out.print("Enter Phone: ");
-					String phone = in.readLine();
-					
-					loggedIn = Users.registerUser(username, password, name, address, phone, con.stmt);	
+					String[] prompts = {"Username", "Password", "Name", "Address", "Phone"};
+					String[] inputs = getInput(prompts);
+
+					loggedIn = Users.registerUser(inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], con.stmt);	
 					if (loggedIn) {
-						login = username;
+						login = inputs[0];
 					}
 					else {
 						System.out.println("Registration Failed");
@@ -191,7 +227,7 @@ public class UotelInterface {
 
 				// Create
 				else if (c == 3) {
-					createTH();	
+					createTH(login);	
 				}
 
 				// Record Stay
@@ -201,7 +237,7 @@ public class UotelInterface {
 				
 				// Trust
 				else if (c == 5) {
-					trustUser();	
+					trustUser(login);	
 				}
 
 				// Degree of Separation

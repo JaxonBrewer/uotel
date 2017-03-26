@@ -51,4 +51,23 @@ public class Users {
 		}
 		return false;
 	}
+
+	public static boolean setTrust(String login1, String login2, boolean isTrusted, Statement stmt) {
+	
+		String sql = "replace into Trust " + 
+			"values ('" + login1 + "','" + login2 + "'," + String.valueOf(isTrusted)  + ")";
+
+
+		System.out.println("executing query: " + sql);
+		try {
+			stmt.executeUpdate(sql);
+			return true;
+		}
+		catch (Exception e) {
+			System.out.println("Cannot execute register query");
+		}
+		finally {
+		}
+		return false;
+	}
 }
