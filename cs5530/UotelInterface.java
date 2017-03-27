@@ -4,6 +4,7 @@ package cs5530;
 import java.lang.*;
 import java.sql.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class UotelInterface {
 
@@ -54,8 +55,10 @@ public class UotelInterface {
 	 * on a new line. Returns the number of the item the user choose, or -1 if choice
 	 * was invalid. 
 	 */
-	public static int displayMenu(String[] items, String header) {
-		System.out.println("\n\n\n----------- " + header + " -----------\n");
+	public static int displayMenu(String[] items, String message) {
+		System.out.println("\n\n\n--------------- Uotel ---------------\n");
+
+		System.out.println(message + "\n");
 
 		for (int i = 0; i < items.length; i++) {
 			System.out.println("" + (i+1) + ": " + items[i]);
@@ -93,10 +96,73 @@ public class UotelInterface {
 	}
 
 	public static void browseTH() {
-		String[] prompts = {"Min Price", "Max Price", "Address", "Keywords", "category", "Sort on a) price, b) feedback, c) trusted feedback: "};
-		String[] inputs = getInput(prompts);
+		String[] searchItems = {"Change price range", "Add address", "Add category", "Add keyword", "Change Sort", "Search"};
+		String[] pricePrompts = {"Min", "Max"};
+		String[] addressPrompts = {"Address"};
+		String[] keywordPrompts = {"Keyword"};
+		String[] categoryPrompts = {"Category"};
+		String[] sortPrompts = {"Sort by \n1) price, \n2) Feedback score, \n3) Trusted Feedback Score \nEnter Choice"};
+	   
+		int minPrice = 0;
+		int maxPrice = -1;
+		ArrayList<String> addresses = new ArrayList<String>();
+		ArrayList<String> categories = new ArrayList<String>();
+		ArrayList<String> keywords = new ArrayList<String>();
+		int sort = 0;
 
-		
+	
+		int	selection = -1; 
+		boolean search = false;
+
+		while (!search) {
+			selection = displayMenu(searchItems, "Search on");
+			// Price
+			if (selection == 1) {
+				String[] inputs = getInput(pricePrompts);
+				if (inputs[0].isEmpty()) {
+					minPrice = 0;	
+				} else {
+					minPrice = Integer.parseInt(inputs[0]);
+				}
+				if (inputs[1].isEmpty()) {
+					maxPrice = -1;
+				} else {
+					maxPrice  = Integer.parseInt(inputs[1]);
+				}				
+			}
+			// address
+			else if (selection == 2) {
+				String[] inputs  = getInput(addressPrompts);
+				addresses.add(inputs[0]);
+			}
+			// category
+			else if (selection == 3) {
+				String[] inputs  = getInput(keywordPrompts);
+				categories.add(inputs[0]);
+			}
+			// keyword
+			else if (selection == 4) {
+				String[] inputs  = getInput(categoryPrompts);
+				keywords.add(inputs[0]);
+			}
+			// sort 
+			else if (selection == 5) {
+				String [] inputs = getInput(sortPrompts);
+				sort = Integer.parseInt(inputs[0]);
+			}
+			// search 
+			else if (selection == 6) {
+				String[] results = TH.searchTH(minPrice, maxPrice, addresses, keywords, categories, sort, con.stmt);
+				while (selection > 0) {
+					selection = displayMenu(results, "Search Results");
+				}
+				return;
+			}
+			// exit
+			else if (selection < 0) {
+				return;
+			}
+		}		
 	}
 
 	public static void viewCart() {
@@ -276,3 +342,4 @@ public class UotelInterface {
          }
 	}
 }
+ 
