@@ -48,7 +48,7 @@ public class TH {
 		return fid;
 	}
 
-	public static String[] searchTH(int minPrice, int maxPrice, ArrayList<String> addresses, ArrayList<String> keywords, ArrayList<String> categories, int sort, Statement stmt) {
+	public static Pair<String[], Integer[]> searchTH(int minPrice, int maxPrice, ArrayList<String> addresses, ArrayList<String> keywords, ArrayList<String> categories, int sort, Statement stmt) {
 		String sql = "SELECT distinct TH.*, T1.word, T2.scoreAvg, T3.trustScoreAvg FROM TH " +
 			"LEFT JOIN (" +
 			"SELECT HasKeywords.hid, Keywords.word " +
@@ -115,6 +115,7 @@ public class TH {
 
 		ResultSet rs = null;	
 		ArrayList<String> THs = new ArrayList<String>();
+		ArrayList<Integer> hids = new ArrayList<Integer>();
 
 		System.out.println("executing query: " + sql);
 		try {
@@ -127,6 +128,7 @@ public class TH {
 						"   Price: " + rs.getString("price") + " | " +
 						"Year Built: " + rs.getString("yearBuilt") + " | " +
 						"Phone: " + rs.getString("phoneNum") + "\n");
+				hids.add(rs.getInt("hid"));
 			}
 		} catch (Exception e) {
 			System.out.println("Cannot execute query:" + e.getMessage());	
@@ -141,7 +143,8 @@ public class TH {
 			}	
 		}
 		String[] result = {};
-		return THs.toArray(result);
+		Integer[] resultIds = {};
+		return new Pair<String[], Integer[]>(THs.toArray(result), hids.toArray(resultIds));
 
 	}
 }

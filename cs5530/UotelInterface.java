@@ -19,20 +19,20 @@ public class UotelInterface {
 
 	private static String[] mainMenuItems = {
 		"Browse Listings",
-		"View Cart",
+		"*View Cart",
 		"Create New Listing",
-		"Record Stay",
+		"*Record Stay",
 		"Trust User",
-		"Cacluate Degree of Separation",
-		"Statitics",
-		"Awards"
+		"*Cacluate Degree of Separation",
+		"*Statitics",
+		"*Awards"
 	};
 
 	private static String[] browseMenuItems = {
-		"Reserve",
-		"Give Feedback",
-		"View Feedback",
-		"Favorite"
+		"*Reserve",
+		"*Give Feedback",
+		"*View Feedback",
+		"*Favorite"
 	};
 
 	private static String[] feedbackMenuItems = {
@@ -115,7 +115,29 @@ public class UotelInterface {
 		boolean search = false;
 
 		while (!search) {
-			selection = displayMenu(searchItems, "Search on");
+			String infoStr = "Search on: ";
+			if (minPrice > 0) {
+				infoStr += "\nMin Price "	+ minPrice;
+			}
+			if (maxPrice >= 0) {
+				infoStr += "\nMax Price "	+ maxPrice;
+			}
+			if (!addresses.isEmpty()) {
+				for (String address : addresses) {
+					infoStr += 	"\nAddress: " + address;
+				}
+			}
+			if (!categories.isEmpty()) {
+				for (String category : categories) {
+					infoStr += 	"\nCategory: " + category;
+				}
+			}
+			if (!keywords.isEmpty()) {
+				for (String keyword : keywords) {
+					infoStr += 	"\nKeyword: " + keyword;
+				}
+			}
+			selection = displayMenu(searchItems, infoStr);
 			// Price
 			if (selection == 1) {
 				String[] inputs = getInput(pricePrompts);
@@ -152,11 +174,14 @@ public class UotelInterface {
 			}
 			// search 
 			else if (selection == 6) {
-				String[] results = TH.searchTH(minPrice, maxPrice, addresses, keywords, categories, sort, con.stmt);
+				Pair<String[], Integer[]> results = TH.searchTH(minPrice, maxPrice, addresses, keywords, categories, sort, con.stmt);
 				while (selection > 0) {
-					selection = displayMenu(results, "Search Results");
+					selection = displayMenu(results.x, "Search Results");
+
+					if (selection > 0) {
+						displayMenu(browseMenuItems, "You selected TH with hid " + results.y[selection-1]);
+					}
 				}
-				return;
 			}
 			// exit
 			else if (selection < 0) {
@@ -279,7 +304,7 @@ public class UotelInterface {
             }
             
             while (true) {
-				c = displayMenu(mainMenuItems, "Hello " + login);
+				c = displayMenu(mainMenuItems, "Hello " + login + "\n* = unimplemented");
 				
 				// Browse
 				if (c == 1) {
